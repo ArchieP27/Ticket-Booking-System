@@ -1,0 +1,81 @@
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static org.junit.Assert.*;
+
+public class LoginTestPage {
+    private HOMEPAGE homepage;
+
+    @Before
+    public void setUp() {
+        homepage = new HOMEPAGE(800, 600); // Assuming width and height
+    }
+
+    @Test
+    public void testLoginWithValidCredentials() {
+        homepage.Un.setText("Archita");
+        homepage.passwordDisplay.setText("Archita@2708");
+        homepage.actionPerformed(new java.awt.event.ActionEvent(homepage.login, 0, ""));
+
+        assertTrue(homepage.isDisposed());
+    }
+
+    @Test
+    public void testLoginWithCorrectUserWrongPassword() {
+        homepage.Un.setText("Archita");
+        homepage.passwordDisplay.setText("invalidPassword");
+        homepage.actionPerformed(new java.awt.event.ActionEvent(homepage.login, 0, ""));
+
+        assertFalse(homepage.isDisposed());
+        assertTrue(homepage.isVisible());
+    }
+
+    @Test
+    public void testInvalidUser() {
+        homepage.Un.setText("invalidUser");
+        homepage.passwordDisplay.setText("invalidPassword");
+        homepage.actionPerformed(new java.awt.event.ActionEvent(homepage.login, 0, ""));
+
+        assertFalse(homepage.isDisposed());
+        assertTrue(homepage.isVisible());
+    }
+
+    @Test
+    public void testUserDoesNotExist() {
+        homepage.Un.setText("nonexistentUser");
+        homepage.passwordDisplay.setText("password123");
+        homepage.actionPerformed(new java.awt.event.ActionEvent(homepage.login, 0, ""));
+
+        assertFalse(homepage.isDisposed());
+        assertTrue(homepage.isVisible());
+    }
+
+    @Test
+    public void testEmptyUsernameAndPassword() {
+        homepage.Un.setText("");
+        homepage.passwordDisplay.setText("");
+        homepage.actionPerformed(new java.awt.event.ActionEvent(homepage.login, 0, ""));
+
+        assertTrue(isErrorMessageDisplayed("Username and Password should not be empty!"));
+    }
+
+    private boolean isErrorMessageDisplayed(String message) {
+        Window[] windows = Window.getWindows();
+        for (Window window : windows) {
+            if (window instanceof JDialog) {
+                JDialog dialog = (JDialog) window;
+                if (dialog.getContentPane().getComponentCount() == 1 &&
+                        dialog.getContentPane().getComponent(0) instanceof JOptionPane) {
+                    JOptionPane optionPane = (JOptionPane) dialog.getContentPane().getComponent(0);
+                    if (optionPane.getMessage() != null && optionPane.getMessage().equals(message)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
