@@ -1,0 +1,92 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import javax.swing.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CustomerInfoTest {
+
+    private CustomerInfo customerInfo;
+
+    @BeforeEach
+    void setUp() {
+        JPanel panel = new JPanel();
+        customerInfo = new CustomerInfo("Archita",panel,"AI191");
+    }
+
+
+    @Test
+    void testEmptyNameField() {
+        customerInfo.name.setText(""); // Simulate empty name field
+        customerInfo.contact.setText("1234567890");
+        customerInfo.seatNumber.setText("A01");
+        customerInfo.emailDisplay.setText("test@example.com");
+
+        assertFalse(customerInfo.isValidSubmission()); // Expecting false because name field is empty
+    }
+
+    @Test
+    void testEmptyContactField() {
+        customerInfo.name.setText("John Doe");
+        customerInfo.contact.setText(""); // Simulate empty contact field
+        customerInfo.seatNumber.setText("A01");
+        customerInfo.emailDisplay.setText("test@example.com");
+
+        assertFalse(customerInfo.isValidSubmission()); // Expecting false because contact field is empty
+    }
+
+    @Test
+    void testEmptySeatNumberField() {
+        customerInfo.name.setText("John Doe");
+        customerInfo.contact.setText("1234567890");
+        customerInfo.seatNumber.setText(""); // Simulate empty seat number field
+        customerInfo.emailDisplay.setText("test@example.com");
+
+        assertFalse(customerInfo.isValidSubmission()); // Expecting false because seat number field is empty
+    }
+
+    @Test
+    void testEmptyEmailField() {
+        customerInfo.name.setText("John Doe");
+        customerInfo.contact.setText("1234567890");
+        customerInfo.seatNumber.setText("A01");
+        customerInfo.emailDisplay.setText(""); // Simulate empty email field
+
+        assertTrue(customerInfo.isValidSubmission()); // Expecting true because email field is optional
+    }
+
+    @Test
+    void testValidName() {
+        assertTrue(customerInfo.isValidName("John"));
+    }
+
+    @Test
+    void testInvalidNameWithNumbers() {
+        assertFalse(customerInfo.isValidName("John123"));
+    }
+
+    @Test
+    void testValidPhoneNumber() {
+        assertTrue(customerInfo.isValidPhoneNumber("1234567890"));
+    }
+
+    @Test
+    void testInvalidPhoneNumberWithLetters() {
+        assertFalse(customerInfo.isValidPhoneNumber("12345abcde"));
+    }
+
+    @Test
+    void testValidEmail() {
+        assertTrue(customerInfo.isValidEmail("test@example.com"));
+    }
+
+
+    @Test
+    void testInvalidEmailWithoutAtSymbol() {
+        assertFalse(customerInfo.isValidEmail("testexample.com"));
+    }
+
+    @Test
+    void testInvalidEmailWithoutDot() {
+        assertFalse(customerInfo.isValidEmail("test@examplecom"));
+    }
+}
